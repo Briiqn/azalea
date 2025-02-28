@@ -81,10 +81,6 @@ pub fn handle_attack_event(
     for event in events.read() {
         let (game_mode, mut ticks_since_last_attack, mut physics, mut sprinting, sneaking) =
             query.get_mut(event.entity).unwrap();
-
-        swing_arm_event.send(SwingArmEvent {
-            entity: event.entity,
-        });
         send_packet_events.send(SendPacketEvent::new(
             event.entity,
             ServerboundInteract {
@@ -93,6 +89,10 @@ pub fn handle_attack_event(
                 using_secondary_action: **sneaking,
             },
         ));
+        swing_arm_event.send(SwingArmEvent {
+            entity: event.entity,
+        });
+
 
         // we can't attack if we're in spectator mode but it still sends the attack
         // packet
